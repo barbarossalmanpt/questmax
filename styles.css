@@ -157,6 +157,23 @@ button:hover,
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04));
   border: 1px solid rgba(255,255,255,0.08);
   min-height: 72vh;
+  scroll-snap-type: x mandatory;
+  touch-action: pan-y;
+}
+
+.screen-strip {
+  display: flex;
+  width: 300%;
+  transform: translateX(0%);
+  transition: transform 0.35s ease;
+}
+
+.screen {
+  min-width: 100%;
+  padding: 22px 16px;
+  display: grid;
+  gap: 18px;
+  scroll-snap-align: start;
 }
 
 .top-left {
@@ -213,28 +230,6 @@ button:hover,
   color: var(--gold);
   border-color: rgba(255,215,0,0.6);
   background: rgba(255,215,0,0.12);
-}
-
-.screen-window {
-  overflow: hidden;
-  border-radius: 28px;
-  position: relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04));
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.screen-strip {
-  display: flex;
-  width: 300%;
-  transform: translateX(0%);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.screen {
-  min-width: 100%;
-  padding: 22px;
-  display: grid;
-  gap: 18px;
 }
 
 .card,
@@ -332,9 +327,20 @@ button:hover,
 }
 
 .hero-button {
-  width: min(280px, 100%);
-  font-size: 14px;
+  width: 100%;
+  max-width: 100%;
+  font-size: 16px;
   padding: 18px 20px;
+}
+
+.quest-summary,
+.quick-actions,
+.clan-actions,
+.battle-stats,
+.achievement-panel,
+.history-panel,
+.hero-panel {
+  width: 100%;
 }
 
 .section-row {
@@ -627,27 +633,31 @@ button:hover,
   }
 
   .page-tabs {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: none;
   }
 
   .bottom-nav {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    padding: 10px 0 12px;
+    padding: 14px 0 14px;
     width: 100%;
-    background: rgba(7, 9, 16, 0.96);
+    background: rgba(8, 12, 24, 0.98);
     border-radius: 24px;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
     box-sizing: border-box;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
   }
 
   .bottom-nav button {
     width: 100%;
+    justify-content: center;
   }
 
   .app-shell {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom, 16px));
+    padding-bottom: calc(140px + env(safe-area-inset-bottom, 16px));
   }
 
   .page-tabs {
@@ -659,13 +669,14 @@ button:hover,
   .filter-pill,
   .option-card,
   .action-button {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .page-tag,
   .nav-button,
   .filter-pill,
-  .option-card {
+  .option-card,
+  .action-button {
     min-height: 48px;
     white-space: normal;
     word-break: break-word;
@@ -674,6 +685,43 @@ button:hover,
   .page-tag {
     padding: 12px 10px;
     min-height: 50px;
+  }
+
+  .hero-copy h2 {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .hero-copy p,
+  .stat-row,
+  .battle-detail,
+  .chest-meta,
+  .history-item,
+  .badge-card,
+  .quest-card,
+  .feed-card,
+  .report-card {
+    font-size: 13px;
+  }
+
+  .hero-panel,
+  .battle-stats,
+  .quest-summary,
+  .quick-actions,
+  .clan-header,
+  .clan-chest,
+  .clan-actions,
+  .achievement-panel,
+  .history-panel {
+    padding: 18px;
+  }
+
+  .status-pill,
+  .profile-badge,
+  .level-pill,
+  .xp-pill {
+    flex: 1 1 45%;
+    min-width: 120px;
   }
 
   .nav-button {
