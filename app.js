@@ -753,6 +753,25 @@ function getEligibleQuests() {
   });
 }
 
+function getQuestLockReason(quest) {
+  if (quest.prereqs.some(id => !state.completedQuestIds.includes(id))) {
+    return "Requires earlier quests to be completed first.";
+  }
+  if (state.profile.partyMode === "Solo" && quest.groupRequired) {
+    return "Requires group play.";
+  }
+  if (quest.gear.includes("bike") && !state.profile.gear.includes("bike")) {
+    return "Requires a bike or skateboard.";
+  }
+  if (quest.gear.includes("pool") && !state.profile.gear.includes("pool")) {
+    return "Requires pool or lake access.";
+  }
+  if (quest.gear.includes("gaming") && !state.profile.gear.includes("gaming")) {
+    return "Requires gaming equipment.";
+  }
+  return "Quest is locked.";
+}
+
 function formatCountdown(timestamp) {
   if (!timestamp) return "00:00:00";
   const diff = Math.max(0, timestamp - Date.now());
@@ -819,7 +838,8 @@ function completeQuest(acceptedQuest, proof) {
     displayName: state.user.displayName,
     questId: acceptedQuest.id,
     title: acceptedQuest.title,
-    image: proof,
+    image: proof.image || proof,
+    note: proof.note || "",
     time: Date.now(),
     reports: [],
     reactions: {}
@@ -881,7 +901,7 @@ function renderQuestList() {
   elements.questList.innerHTML = "";
   const quests = getEligibleQuests();
   if (quests.length === 0) {
-    elements.questList.innerHTML = `<div class="quest-card"><p>No quests match your profile yet.</p></div>`;
+    elements.questList.innerHTML = `<div class="quest-card"><p>Your profile currently does not match any available quests. Try updating your character choices in the profile.</p></div>`;
     return;
   }
   quests.forEach(quest => {
@@ -892,6 +912,10 @@ function renderQuestList() {
       <h3>${quest.title}</h3>
       <p>${quest.description}</p>
       <div class="stat-row">
+        <span>${quest.category}</span>
+        <span>${quest.location}</span>
+      </div>
+      <div class="stat-row">
         <span>${quest.tier}</span>
         <span>${quest.xp} XP</span>
       </div>
@@ -899,15 +923,15 @@ function renderQuestList() {
     `;
     const actions = card.querySelector(".quest-actions");
     const acceptButton = document.createElement("button");
-    acceptButton.textContent = quest.locked ? "Locked" : "Accept Quest";
+    acceptButton.textContent = quest.locked ? "Locked" : "Claim Quest";
     acceptButton.className = "action-button primary";
     acceptButton.disabled = quest.locked || state.bannedUntil > Date.now();
     acceptButton.addEventListener("click", () => acceptQuest(quest));
     actions.appendChild(acceptButton);
     if (quest.locked) {
       const hint = document.createElement("p");
-      hint.style.color = "var(--text-muted)";
-      hint.textContent = "Complete prerequisites first.";
+      hint.className = "quest-note";
+      hint.textContent = getQuestLockReason(quest);
       card.appendChild(hint);
     }
     elements.questList.appendChild(card);
@@ -938,7 +962,7 @@ function renderAcceptedQuests() {
   elements.acceptedQuests.innerHTML = "";
   failExpiredQuests();
   if (state.activeQuests.length === 0) {
-    elements.acceptedQuests.innerHTML = `<div class="quest-card"><p>No active quests. Accept one from the Quest Board.</p></div>`;
+    elements.acceptedQuests.innerHTML = `<div class="quest-card"><p>No active missions. Claim one from the Available Quests list.</p></div>`;
     return;
   }
   state.activeQuests.forEach(quest => {
@@ -950,6 +974,10 @@ function renderAcceptedQuests() {
       <h3>${quest.title}</h3>
       <p>${quest.description}</p>
       <div class="stat-row">
+        <span>${quest.category}</span>
+        <span>${quest.location}</span>
+      </div>
+      <div class="stat-row">
         <span>${quest.tier}</span>
         <span>${quest.xp} XP</span>
       </div>
@@ -957,11 +985,14 @@ function renderAcceptedQuests() {
       <div class="quest-actions"></div>
     `;
     const actions = card.querySelector(".quest-actions");
+    const noteInput = document.createElement("textarea");
+    noteInput.placeholder = "Add a quick completion note (optional)";
+    noteInput.rows = 2;
+    noteInput.className = "proof-note-input";
     const uploadInput = document.createElement("input");
     uploadInput.type = "file";
     uploadInput.accept = "image/*";
-    uploadInput.addEventListener("change", e => handleProofUpload(e, quest.id));
-    actions.appendChild(uploadInput);
+    uploadInput.addEventListener("change", e => handleProofUpload(e, quest.id, noteInput));
     const cancelButton = document.createElement("button");
     cancelButton.textContent = "Abandon";
     cancelButton.className = "action-button secondary";
@@ -970,12 +1001,14 @@ function renderAcceptedQuests() {
       saveAndSync();
       renderApp();
     });
+    actions.appendChild(noteInput);
+    actions.appendChild(uploadInput);
     actions.appendChild(cancelButton);
     elements.acceptedQuests.appendChild(card);
   });
 }
 
-function handleProofUpload(event, questId) {
+function handleProofUpload(event, questId, noteField) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -985,7 +1018,10 @@ function handleProofUpload(event, questId) {
       showToast("Accepted quest not found.");
       return;
     }
-    completeQuest(acceptedQuest, reader.result);
+    completeQuest(acceptedQuest, {
+      image: reader.result,
+      note: noteField?.value.trim() || ""
+    });
     renderApp();
   };
   reader.readAsDataURL(file);
@@ -1025,12 +1061,15 @@ function renderGroupScreen() {
     return;
   }
   const members = state.group.members || [];
+  const role = state.group.adminUid === state.user.uid ? "Guild Leader" : "Guild Member";
   const card = document.createElement("div");
   card.className = "group-card";
   card.innerHTML = `
     <h3>${state.group.name}</h3>
+    <p>Role: ${role}</p>
     <p>Code: ${state.group.code}</p>
     <p>Members: ${members.length}</p>
+    ${state.groupRequests?.length ? `<p>${state.groupRequests.length} pending join request(s)</p>` : ""}
   `;
   if (state.isAdmin) {
     const approveButton = document.createElement("button");
@@ -1039,7 +1078,27 @@ function renderGroupScreen() {
     approveButton.addEventListener("click", () => openRequestReview());
     card.appendChild(approveButton);
   }
+  const leaveButton = document.createElement("button");
+  leaveButton.className = "action-button danger";
+  leaveButton.textContent = state.group.adminUid === state.user.uid ? "Disband Guild" : "Leave Guild";
+  leaveButton.addEventListener("click", () => leaveGroup());
+  card.appendChild(leaveButton);
   elements.groupStatus.appendChild(card);
+}
+
+function leaveGroup() {
+  const confirmText = state.group.adminUid === state.user.uid ?
+    "Disbanding the guild will remove all members. Continue?" :
+    "Leave the guild and stop receiving group quests?";
+  if (!window.confirm(confirmText)) {
+    return;
+  }
+  state.group = null;
+  state.groupRequests = [];
+  state.isAdmin = false;
+  saveAndSync();
+  showToast("You have left the guild.");
+  renderApp();
 }
 
 function openRequestReview() {
@@ -1113,6 +1172,7 @@ function renderGroupFeed() {
     card.innerHTML = `
       <h3>${post.title}</h3>
       <p>By ${post.displayName}</p>
+      ${post.note ? `<p class="proof-note">"${post.note}"</p>` : ""}
       <img src="${post.image}" alt="Proof photo" />
       <div class="feed-footer"></div>
     `;
@@ -1201,6 +1261,9 @@ function renderProfile() {
     <div class="stat-row"><span>Total XP</span><span>${state.xp}</span></div>
     <div class="stat-row"><span>Streak</span><span>${state.streak} days</span></div>
     <div class="stat-row"><span>Max Streak</span><span>${state.maxStreak} days</span></div>
+    <div class="stat-row"><span>Play Style</span><span>${state.profile.partyMode}</span></div>
+    <div class="stat-row"><span>Quest Focus</span><span>${state.profile.hobbies.length ? state.profile.hobbies.join(", ") : "Any"}</span></div>
+    <div class="stat-row"><span>Realm</span><span>${state.profile.realm}</span></div>
     <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
     <p>${progress}% to level ${level + 1}</p>
   `;
@@ -1239,11 +1302,20 @@ function renderLeaderboard() {
   container.className = "stats-grid";
   const leaderboard = [...DUMMY_USERS, { uid: state.user.uid, displayName: state.user.displayName, xp: state.xp, streak: state.streak, maxStreak: state.maxStreak }];
   leaderboard.sort((a, b) => b.xp - a.xp);
-  leaderboard.forEach((player, index) => {
+  const rank = leaderboard.findIndex(player => player.uid === state.user.uid) + 1;
+  const rankCard = document.createElement("div");
+  rankCard.className = "stat-card";
+  rankCard.innerHTML = `
+    <h3>Your Rank</h3>
+    <p>#${rank} of ${leaderboard.length}</p>
+    <p>Keep climbing by completing quests and earning XP.</p>
+  `;
+  container.appendChild(rankCard);
+  leaderboard.slice(0, 3).forEach((player, index) => {
     const card = document.createElement("div");
     card.className = "stat-card";
     card.innerHTML = `
-      <h3>#${index + 1} ${player.displayName}</h3>
+      <h3>Top ${index + 1}: ${player.displayName}</h3>
       <p>${player.xp} XP • Streak ${player.streak}</p>
     `;
     container.appendChild(card);
@@ -1259,7 +1331,7 @@ function renderAdmin() {
   }
   const reportSection = document.createElement("div");
   reportSection.className = "admin-card";
-  reportSection.innerHTML = `<h3>Flags</h3>`;
+  reportSection.innerHTML = `<h3>Review Reports</h3>`;
   if (state.reports.length === 0) {
     reportSection.innerHTML += `<p>No reports at the moment.</p>`;
   }
@@ -1393,7 +1465,7 @@ function closeOnboarding() {
 function renderWizardStep() {
   const step = wizardSteps[currentStep];
   elements.backStep.classList.toggle("hidden", currentStep === 0);
-  elements.nextStep.textContent = currentStep === wizardSteps.length - 1 ? "Finish" : "Next";
+  elements.nextStep.textContent = currentStep === wizardSteps.length - 1 ? "Confirm" : "Next";
   elements.wizardStep.innerHTML = "";
 
   if (step === "party") {
@@ -1404,7 +1476,7 @@ function renderWizardStep() {
     note.textContent = "Pick the style that best fits your summer questing mood.";
     elements.wizardStep.appendChild(note);
     [
-      { label: "Solo Adventurer — I like personal quests", value: "Solo" },
+      { label: "Solo Adventurer — personal quests only", value: "Solo" },
       { label: "Team Player — I want group quests", value: "Group" },
       { label: "Flexible — I can do both", value: "Mixed" }
     ].forEach(option => {
@@ -1424,7 +1496,7 @@ function renderWizardStep() {
     title.textContent = "What challenge level fits you?";
     elements.wizardStep.appendChild(title);
     const note = document.createElement("p");
-    note.textContent = "This sets the difficulty and energy of your suggested quests.";
+    note.textContent = "This sets the strength and energy of your suggested quests.";
     elements.wizardStep.appendChild(note);
     [
       { label: "Easy & relaxed (Beginner)", value: "Beginner" },
@@ -1444,10 +1516,10 @@ function renderWizardStep() {
 
   if (step === "hobbies") {
     const title = document.createElement("h3");
-    title.textContent = "Which kinds of adventures do you enjoy?";
+    title.textContent = "Which kinds of quests excite you?";
     elements.wizardStep.appendChild(title);
     const note = document.createElement("p");
-    note.textContent = "Choose your favorite quest themes so your recommendations feel right.";
+    note.textContent = "Choose your favorite adventure types so recommendations feel right.";
     elements.wizardStep.appendChild(note);
     [
       { label: "Creative projects", value: "Artisan" },
@@ -1476,7 +1548,7 @@ function renderWizardStep() {
     title.textContent = "Where do you want your quests to take place?";
     elements.wizardStep.appendChild(title);
     const note = document.createElement("p");
-    note.textContent = "Pick the setting that matches your summer vibe and available locations.";
+    note.textContent = "Pick the setting that matches your summer vibe and availability.";
     elements.wizardStep.appendChild(note);
     [
       { label: "City-style adventures (Grand Citadel)", value: "The Grand Citadel" },
@@ -1536,7 +1608,28 @@ function renderWizardStep() {
       elements.wizardStep.appendChild(button);
     });
   }
+
+  if (step === "summary") {
+    const title = document.createElement("h3");
+    title.textContent = "Review your character";
+    elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Confirm your profile before entering the quest world.";
+    elements.wizardStep.appendChild(note);
+    const review = document.createElement("div");
+    review.className = "wizard-summary";
+    review.innerHTML = `
+      <p><strong>Play style:</strong> ${wizardDraft.partyMode}</p>
+      <p><strong>Difficulty:</strong> ${wizardDraft.attribute}</p>
+      <p><strong>Quest types:</strong> ${wizardDraft.hobbies.length ? wizardDraft.hobbies.join(", ") : "Any"}</p>
+      <p><strong>Realm:</strong> ${wizardDraft.realm}</p>
+      <p><strong>Budget:</strong> ${wizardDraft.budget === "free" ? "Free quests only" : "Minor spending allowed"}</p>
+      <p><strong>Gear:</strong> ${wizardDraft.gear.length ? wizardDraft.gear.join(", ") : "None"}</p>
+    `;
+    elements.wizardStep.appendChild(review);
+  }
 }
+
 
 function completeOnboarding() {
   state.profile = buildProfile(wizardDraft);
