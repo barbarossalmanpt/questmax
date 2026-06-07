@@ -19,7 +19,12 @@ export function initAuthPage() {
   onAuthStateChanged(auth, async user => {
     const onIndexRoot = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/");
     if (user) {
-      await ensureUserDocument(user);
+      try {
+        await ensureUserDocument(user);
+      } catch (error) {
+        console.error("Firestore permission error during sign-in", error);
+        alert("Signed in successfully, but Firestore access failed. Please enable Firestore rules or deploy the included firestore.rules file.");
+      }
       if (onIndexRoot) {
         window.location.href = "pages/feed.html";
       }

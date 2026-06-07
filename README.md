@@ -112,8 +112,9 @@ cd questmax
 5. Copy `js/firebaseConfig.example.js` to `js/firebaseConfig.js`, fill in your Firebase config values, and commit it when deploying to GitHub Pages.
 6. In Firebase Authentication settings, add these authorized domains:
    - `localhost`
-   - `127.0.0.1`
    - `barbarossalmanpt.github.io`
+
+7. In Firebase Console, open Firestore Rules and use the demo rule set from `firestore.rules`.
 
 ### 3. Set up the Anthropic API
 1. Get your API key from [console.anthropic.com](https://console.anthropic.com)

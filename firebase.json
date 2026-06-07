@@ -8,5 +8,8 @@
         "function": "generateQuest"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }
