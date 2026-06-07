@@ -507,7 +507,9 @@ const wizardSteps = [
   "attribute",
   "hobbies",
   "realm",
-  "inventory"
+  "budget",
+  "gear",
+  "summary"
 ];
 let currentStep = 0;
 let wizardDraft = {
@@ -1515,6 +1517,39 @@ function closeOnboarding() {
   elements.onboardingModal.classList.add("hidden");
 }
 
+function showWizardFeedback(message) {
+  const feedback = document.createElement("div");
+  feedback.className = "wizard-feedback";
+  feedback.textContent = message;
+  elements.wizardStep.appendChild(feedback);
+  setTimeout(() => {
+    feedback.classList.add("fade-out");
+    setTimeout(() => feedback.remove(), 300);
+  }, 800);
+}
+
+function selectWizardOption(key, value, singleChoice = true) {
+  if (singleChoice) {
+    wizardDraft[key] = value;
+  } else {
+    if (wizardDraft[key].includes(value)) {
+      wizardDraft[key] = wizardDraft[key].filter(item => item !== value);
+    } else {
+      wizardDraft[key].push(value);
+    }
+  }
+  renderWizardStep();
+  if (singleChoice && currentStep < wizardSteps.length - 1) {
+    elements.wizardStep.classList.add("wizard-flip");
+    showWizardFeedback("Nice choice! Loading next question...");
+    setTimeout(() => {
+      elements.wizardStep.classList.remove("wizard-flip");
+      currentStep += 1;
+      renderWizardStep();
+    }, 520);
+  }
+}
+
 function renderWizardStep() {
   const step = wizardSteps[currentStep];
   elements.backStep.classList.toggle("hidden", currentStep === 0);
@@ -1531,15 +1566,12 @@ function renderWizardStep() {
     [
       { label: "Solo Adventurer — personal quests only", value: "Solo" },
       { label: "Team Player — I want group quests", value: "Group" },
-      { label: "Flexible — I can do both", value: "Mixed" }
+      { label: "Flexible — I can do both solo and group", value: "Mixed" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.partyMode === option.value ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        wizardDraft.partyMode = option.value;
-        renderWizardStep();
-      });
+      button.addEventListener("click", () => selectWizardOption("partyMode", option.value, true));
       elements.wizardStep.appendChild(button);
     });
   }
@@ -1559,10 +1591,7 @@ function renderWizardStep() {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.attribute === option.value ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        wizardDraft.attribute = option.value;
-        renderWizardStep();
-      });
+      button.addEventListener("click", () => selectWizardOption("attribute", option.value, true));
       elements.wizardStep.appendChild(button);
     });
   }
@@ -1572,26 +1601,23 @@ function renderWizardStep() {
     title.textContent = "Which kinds of quests excite you?";
     elements.wizardStep.appendChild(title);
     const note = document.createElement("p");
-    note.textContent = "Choose your favorite adventure types so recommendations feel right.";
+    note.textContent = "Choose all that apply — the more you pick, the better the recommendations.";
     elements.wizardStep.appendChild(note);
     [
       { label: "Creative projects", value: "Artisan" },
       { label: "Performance & music", value: "Bard" },
       { label: "Strength & challenge", value: "Gladiator" },
       { label: "Exploration & outdoors", value: "Scout" },
-      { label: "Tech & puzzles", value: "Tech Alchemist" }
+      { label: "Tech & puzzles", value: "Tech Alchemist" },
+      { label: "Nature & adventure", value: "Explorer" },
+      { label: "Crafting & building", value: "Maker" },
+      { label: "Social/team quests", value: "Leader" }
     ].forEach(option => {
       const button = document.createElement("button");
-      button.className = `action-button${wizardDraft.hobbies.includes(option.value) ? " active" : ""}`;
+      const selected = wizardDraft.hobbies.includes(option.value);
+      button.className = `action-button${selected ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        if (wizardDraft.hobbies.includes(option.value)) {
-          wizardDraft.hobbies = wizardDraft.hobbies.filter(item => item !== option.value);
-        } else {
-          wizardDraft.hobbies.push(option.value);
-        }
-        renderWizardStep();
-      });
+      button.addEventListener("click", () => selectWizardOption("hobbies", option.value, false));
       elements.wizardStep.appendChild(button);
     });
   }
@@ -1611,53 +1637,50 @@ function renderWizardStep() {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.realm === option.value ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        wizardDraft.realm = option.value;
-        renderWizardStep();
-      });
+      button.addEventListener("click", () => selectWizardOption("realm", option.value, true));
       elements.wizardStep.appendChild(button);
     });
   }
 
-  if (step === "inventory") {
+  if (step === "budget") {
     const title = document.createElement("h3");
-    title.textContent = "What resources do you have?";
+    title.textContent = "What budget should your quests use?";
     elements.wizardStep.appendChild(title);
     const note = document.createElement("p");
-    note.textContent = "Tell us the gear and budget options you can use for quests.";
+    note.textContent = "Choose whether you want only free quests or a few paid options.";
     elements.wizardStep.appendChild(note);
-    const budgetRow = document.createElement("div");
-    budgetRow.className = "button-grid";
     [
-      { label: "Only free quests", value: "free" },
-      { label: "I can spend a little", value: "paid" }
+      { label: "Free-only quests", value: "free" },
+      { label: "Free + low-cost quests", value: "paid" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.budget === option.value ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        wizardDraft.budget = option.value;
-        renderWizardStep();
-      });
-      budgetRow.appendChild(button);
+      button.addEventListener("click", () => selectWizardOption("budget", option.value, true));
+      elements.wizardStep.appendChild(button);
     });
-    elements.wizardStep.appendChild(budgetRow);
+  }
+
+  if (step === "gear") {
+    const title = document.createElement("h3");
+    title.textContent = "Which equipment do you have available?";
+    elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Pick all the gear you can use during quests.";
+    elements.wizardStep.appendChild(note);
     [
-      { label: "I have a bike or skateboard", value: "bike" },
-      { label: "I can use a pool or lake", value: "pool" },
-      { label: "I have access to gaming gear", value: "gaming" }
+      { label: "Bike or skateboard", value: "bike" },
+      { label: "Pool, lake, or water access", value: "pool" },
+      { label: "Gaming setup", value: "gaming" },
+      { label: "Phone camera", value: "camera" },
+      { label: "Sketchbook or craft tools", value: "art" },
+      { label: "Running shoes or hiking gear", value: "outdoor" }
     ].forEach(option => {
       const button = document.createElement("button");
-      button.className = `action-button${wizardDraft.gear.includes(option.value) ? " active" : ""}`;
+      const selected = wizardDraft.gear.includes(option.value);
+      button.className = `action-button${selected ? " active" : ""}`;
       button.textContent = option.label;
-      button.addEventListener("click", () => {
-        if (wizardDraft.gear.includes(option.value)) {
-          wizardDraft.gear = wizardDraft.gear.filter(item => item !== option.value);
-        } else {
-          wizardDraft.gear.push(option.value);
-        }
-        renderWizardStep();
-      });
+      button.addEventListener("click", () => selectWizardOption("gear", option.value, false));
       elements.wizardStep.appendChild(button);
     });
   }
