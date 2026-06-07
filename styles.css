@@ -74,18 +74,19 @@ button:disabled, button[disabled], .action-button[disabled] {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 12px 96px;
+  padding: 30px 16px 110px;
 }
 
 .app-shell {
   position: relative;
+  background: radial-gradient(circle at top, rgba(255,215,0,0.08), transparent 18%), radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.08), transparent 14%), linear-gradient(180deg, #061023 0%, #02040c 100%);
 }
 
 .app-frame {
-  width: min(540px, calc(100vw - 24px));
+  width: min(580px, calc(100vw - 24px));
   margin: 0 auto;
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .top-bar {
@@ -93,11 +94,12 @@ button:disabled, button[disabled], .action-button[disabled] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 20px 20px 14px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(18, 25, 48, 0.94), rgba(11, 18, 35, 0.95));
-  border: 2px solid rgba(255, 215, 0, 0.15);
+  gap: 14px;
+  padding: 22px 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(22, 32, 58, 0.98), rgba(10, 16, 34, 0.96));
+  border: 2px solid rgba(255, 215, 0, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
 }
 
 .top-bar .brand {
@@ -113,11 +115,23 @@ button:disabled, button[disabled], .action-button[disabled] {
 }
 
 .panel-title {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: var(--gold);
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-size: 11px;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+}
+
+.panel-title::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.08);
 }
 
 .top-actions {
@@ -165,12 +179,27 @@ button:disabled, button[disabled], .action-button[disabled] {
 
 .screen-container {
   width: 100%;
-  display: grid;
-  gap: 16px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  border-radius: 28px;
+  min-height: 520px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.screen-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 20% 18%, rgba(255,215,0,0.12), transparent 16%), radial-gradient(circle at 78% 72%, rgba(117,213,169,0.12), transparent 16%);
 }
 
 .panel {
   padding: 18px;
+  background: linear-gradient(180deg, rgba(16,24,46,0.92), rgba(10,14,28,0.92));
 }
 
 .quit-panel {
@@ -182,14 +211,17 @@ button:disabled, button[disabled], .action-button[disabled] {
 }
 
 .login-card {
-  width: min(420px, calc(100vw - 32px));
-  padding: 32px 24px;
+  width: min(460px, calc(100vw - 32px));
+  padding: 36px 28px;
   text-align: center;
+  background: linear-gradient(180deg, rgba(15,25,53,0.98), rgba(7,12,25,0.98));
+  border: 2px solid rgba(255,215,0,0.16);
 }
 
 .login-card h1 {
-  margin: 0 0 14px;
-  font-size: 20px;
+  margin: 0 0 12px;
+  font-size: 22px;
+  letter-spacing: 0.04em;
 }
 
 .login-card p,
@@ -215,11 +247,19 @@ button:disabled, button[disabled], .action-button[disabled] {
 }
 
 .screen {
-  display: none;
+  flex: 0 0 100%;
+  min-width: 100%;
+  display: grid;
+  gap: 16px;
+  padding: 24px 18px 28px;
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease;
+  opacity: 0.35;
+  transform: scale(0.98);
 }
 
 .active-screen {
-  display: block;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .quest-grid,
@@ -308,30 +348,42 @@ button:disabled, button[disabled], .action-button[disabled] {
 .bottom-nav {
   position: fixed;
   left: 50%;
-  bottom: 0;
+  bottom: 12px;
   transform: translateX(-50%);
-  width: min(540px, calc(100vw - 24px));
+  width: min(560px, calc(100vw - 24px));
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background: rgba(6, 12, 28, 0.96);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding: 12px 10px 18px;
-  gap: 8px;
+  gap: 10px;
+  background: rgba(4, 10, 24, 0.96);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+  backdrop-filter: blur(10px);
 }
 
 .nav-button {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);
   color: var(--text-muted);
-  font-size: 10px;
-  padding: 10px 8px;
-  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-radius: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.nav-button:hover {
+  transform: translateY(-1px);
 }
 
 .nav-button.active-nav {
-  color: var(--gold);
+  color: #faf1b1;
   border-color: rgba(255,215,0,0.6);
-  background: rgba(255,215,0,0.14);
+  background: linear-gradient(180deg, rgba(255,215,0,0.18), rgba(255,215,0,0.08));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
 .login-card button {

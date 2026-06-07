@@ -484,6 +484,7 @@ const elements = {
   nextStep: document.getElementById("next-step"),
   overlay: document.getElementById("overlay"),
   overlayContent: document.getElementById("overlay-content"),
+  screenContainer: document.querySelector(".screen-container"),
   navButtons: Array.from(document.querySelectorAll(".nav-button")),
   adminNavButton: document.getElementById("admin-nav-button"),
   pageTitle: document.getElementById("page-title"),
@@ -501,6 +502,8 @@ const elements = {
   settingsModal: document.getElementById("settings-modal"),
   settingsContent: document.getElementById("settings-content")
 };
+
+const viewOrder = ["feed", "board", "groups", "profile", "admin"];
 
 const wizardSteps = [
   "party",
@@ -556,10 +559,14 @@ function switchView(view) {
   elements.navButtons.forEach(btn => {
     btn.classList.toggle("active-nav", btn.dataset.view === view);
   });
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.toggle("active-screen", screen.id === `${view}-screen`);
+  const activeIndex = viewOrder.indexOf(view);
+  if (elements.screenContainer) {
+    elements.screenContainer.style.transform = `translateX(-${activeIndex * 100}%)`;
+  }
+  document.querySelectorAll(".screen").forEach((screen, index) => {
+    screen.classList.toggle("active-screen", index === activeIndex);
   });
-  elements.pageTitle.textContent = view === "feed" ? "Feed" : view === "board" ? "Quest Board" : view === "groups" ? "Groups" : view === "profile" ? "Profile" : "Admin";
+  elements.pageTitle.textContent = view === "feed" ? "Quest Feed" : view === "board" ? "Missions" : view === "groups" ? "Guild Hub" : view === "profile" ? "Champion Profile" : "Admin";
   renderApp();
 }
 
