@@ -26,6 +26,7 @@ const AUTH = getAuth(APP);
 const DB = getFirestore(APP);
 const PROVIDER = new GoogleAuthProvider();
 const FIRESTORE_ENABLED = false;
+const RESET_DEMO = new URLSearchParams(window.location.search).get("reset") === "1";
 
 const STORAGE_PROFILE = "user_character_profile";
 const STORAGE_STATE = "summer_side_quests_state";
@@ -313,6 +314,7 @@ const elements = {
   loginShell: document.getElementById("login-shell"),
   loginButton: document.getElementById("login-button"),
   guestButton: document.getElementById("guest-button"),
+  resetButton: document.getElementById("reset-button"),
   authButton: document.getElementById("auth-button"),
   logoutButton: document.getElementById("logout-button"),
   pageTags: Array.from(document.querySelectorAll(".page-tag")),
@@ -408,6 +410,11 @@ function buildProfileFromWizard(profile) {
   };
 }
 
+function clearSavedDemoState() {
+  localStorage.removeItem(STORAGE_STATE);
+  localStorage.removeItem(STORAGE_PROFILE);
+}
+
 function saveState() {
   localStorage.setItem(STORAGE_STATE, JSON.stringify(state));
   if (state.profile) {
@@ -416,6 +423,9 @@ function saveState() {
 }
 
 async function loadState() {
+  if (RESET_DEMO) {
+    clearSavedDemoState();
+  }
   const rawState = localStorage.getItem(STORAGE_STATE);
   const rawProfile = localStorage.getItem(STORAGE_PROFILE);
 
@@ -1165,6 +1175,11 @@ function attachEventListeners() {
   elements.guestButton.addEventListener("click", () => {
     openApp();
     showToast("Guest mode enabled. Local progress is saved.");
+  });
+  elements.resetButton.addEventListener("click", () => {
+    clearSavedDemoState();
+    showToast("Demo state reset. Reloading fresh user experience.");
+    window.location.href = window.location.pathname;
   });
   elements.authButton.addEventListener("click", signInWithGoogle);
   elements.logoutButton.addEventListener("click", async () => {
