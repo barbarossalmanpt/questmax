@@ -1398,12 +1398,15 @@ function renderWizardStep() {
 
   if (step === "party") {
     const title = document.createElement("h3");
-    title.textContent = "Choose Party Mode";
+    title.textContent = "How do you want to play?";
     elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Pick the style that best fits your summer questing mood.";
+    elements.wizardStep.appendChild(note);
     [
-      { label: "Lone Wolf", value: "Solo" },
-      { label: "Guild Member", value: "Group" },
-      { label: "Mixed Adventurer", value: "Mixed" }
+      { label: "Solo Adventurer — I like personal quests", value: "Solo" },
+      { label: "Team Player — I want group quests", value: "Group" },
+      { label: "Flexible — I can do both", value: "Mixed" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.partyMode === option.value ? " active" : ""}`;
@@ -1418,12 +1421,15 @@ function renderWizardStep() {
 
   if (step === "attribute") {
     const title = document.createElement("h3");
-    title.textContent = "Choose Your Path";
+    title.textContent = "What challenge level fits you?";
     elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "This sets the difficulty and energy of your suggested quests.";
+    elements.wizardStep.appendChild(note);
     [
-      { label: "Beginner (Mage)", value: "Beginner" },
-      { label: "Intermediate (Ranger)", value: "Intermediate" },
-      { label: "Athlete (Barbarian)", value: "Athlete" }
+      { label: "Easy & relaxed (Beginner)", value: "Beginner" },
+      { label: "Balanced & active (Intermediate)", value: "Intermediate" },
+      { label: "High intensity (Athlete)", value: "Athlete" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.attribute === option.value ? " active" : ""}`;
@@ -1438,14 +1444,17 @@ function renderWizardStep() {
 
   if (step === "hobbies") {
     const title = document.createElement("h3");
-    title.textContent = "Select Your Guild Skills";
+    title.textContent = "Which kinds of adventures do you enjoy?";
     elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Choose your favorite quest themes so your recommendations feel right.";
+    elements.wizardStep.appendChild(note);
     [
-      { label: "Artisan", value: "Artisan" },
-      { label: "Bard", value: "Bard" },
-      { label: "Gladiator", value: "Gladiator" },
-      { label: "Scout", value: "Scout" },
-      { label: "Tech Alchemist", value: "Tech Alchemist" }
+      { label: "Creative projects", value: "Artisan" },
+      { label: "Performance & music", value: "Bard" },
+      { label: "Strength & challenge", value: "Gladiator" },
+      { label: "Exploration & outdoors", value: "Scout" },
+      { label: "Tech & puzzles", value: "Tech Alchemist" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.hobbies.includes(option.value) ? " active" : ""}`;
@@ -1464,12 +1473,15 @@ function renderWizardStep() {
 
   if (step === "realm") {
     const title = document.createElement("h3");
-    title.textContent = "Choose Your Realm";
+    title.textContent = "Where do you want your quests to take place?";
     elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Pick the setting that matches your summer vibe and available locations.";
+    elements.wizardStep.appendChild(note);
     [
-      { label: "The Grand Citadel", value: "The Grand Citadel" },
-      { label: "The Shires", value: "The Shires" },
-      { label: "The Wild Frontier", value: "The Wild Frontier" }
+      { label: "City-style adventures (Grand Citadel)", value: "The Grand Citadel" },
+      { label: "Cozy village quests (The Shires)", value: "The Shires" },
+      { label: "Wild outdoor missions (Wild Frontier)", value: "The Wild Frontier" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.realm === option.value ? " active" : ""}`;
@@ -1484,13 +1496,16 @@ function renderWizardStep() {
 
   if (step === "inventory") {
     const title = document.createElement("h3");
-    title.textContent = "Choose Budget & Gear";
+    title.textContent = "What resources do you have?";
     elements.wizardStep.appendChild(title);
+    const note = document.createElement("p");
+    note.textContent = "Tell us the gear and budget options you can use for quests.";
+    elements.wizardStep.appendChild(note);
     const budgetRow = document.createElement("div");
     budgetRow.className = "button-grid";
     [
-      { label: "Free quests only", value: "free" },
-      { label: "Minor cash allowed", value: "paid" }
+      { label: "Only free quests", value: "free" },
+      { label: "I can spend a little", value: "paid" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.budget === option.value ? " active" : ""}`;
@@ -1503,9 +1518,9 @@ function renderWizardStep() {
     });
     elements.wizardStep.appendChild(budgetRow);
     [
-      { label: "Bicycle / Skateboard", value: "bike" },
-      { label: "Pool / Beach / Lake", value: "pool" },
-      { label: "Gaming Rig", value: "gaming" }
+      { label: "I have a bike or skateboard", value: "bike" },
+      { label: "I can use a pool or lake", value: "pool" },
+      { label: "I have access to gaming gear", value: "gaming" }
     ].forEach(option => {
       const button = document.createElement("button");
       button.className = `action-button${wizardDraft.gear.includes(option.value) ? " active" : ""}`;
