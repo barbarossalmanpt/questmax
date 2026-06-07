@@ -3,15 +3,16 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCnsoo38-Fa9Eol2lZdUZyV5TeYBbZv0gU",
-  authDomain: "questmax-93d80.firebaseapp.com",
-  projectId: "questmax-93d80",
-  storageBucket: "questmax-93d80.firebasestorage.app",
-  messagingSenderId: "253391804594",
-  appId: "1:253391804594:web:0d4aa6078e18f9fa9611ab"
-};
+async function loadFirebaseConfig() {
+  try {
+    return (await import("./firebaseConfig.js")).default;
+  } catch (error) {
+    console.warn("No local js/firebaseConfig.js found. Falling back to example placeholder config.");
+    return (await import("./firebaseConfig.example.js")).default;
+  }
+}
 
+const firebaseConfig = await loadFirebaseConfig();
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

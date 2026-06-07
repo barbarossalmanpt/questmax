@@ -109,7 +109,7 @@ cd questmax
 2. Enable **Authentication** → Google Sign-In
 3. Enable **Firestore Database** (start in test mode)
 4. Enable **Storage**
-5. Copy your Firebase config object into `js/firebase.js`
+5. Copy `js/firebaseConfig.example.js` to `js/firebaseConfig.js` and fill in your Firebase config values.
 
 ### 3. Set up the Anthropic API
 1. Get your API key from [console.anthropic.com](https://console.anthropic.com)
