@@ -17,13 +17,14 @@ export function initAuthPage() {
   }
 
   onAuthStateChanged(auth, async user => {
+    const onIndexRoot = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/");
     if (user) {
       await ensureUserDocument(user);
-      if (window.location.pathname.endsWith("index.html") || window.location.pathname === "/") {
+      if (onIndexRoot) {
         window.location.href = "pages/feed.html";
       }
     } else {
-      if (!window.location.pathname.endsWith("index.html") && !window.location.pathname.endsWith("/")) {
+      if (!onIndexRoot) {
         window.location.href = "../index.html";
       }
     }
@@ -38,7 +39,8 @@ async function signInWithGoogle() {
     window.location.href = "pages/feed.html";
   } catch (error) {
     console.error("Sign in failed", error);
-    alert("Unable to sign in. Please try again.");
+    const errorMessage = error?.message || "Unable to sign in. Please try again.";
+    alert(`Unable to sign in. ${errorMessage}`);
   }
 }
 
