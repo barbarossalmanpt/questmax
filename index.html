@@ -14,9 +14,12 @@
     <header class="top-bar">
       <div>
         <p class="brand">Summer Side Quests</p>
-        <h1 id="page-title">Feed</h1>
+        <h1 id="page-title">Quest Feed</h1>
       </div>
-      <button id="logout-button" class="action-button danger">Log out</button>
+      <div class="top-actions">
+        <button id="settings-button" class="action-button secondary">Settings</button>
+        <button id="logout-button" class="action-button danger">Log out</button>
+      </div>
     </header>
 
     <section id="toast" class="toast hidden"></section>
@@ -109,6 +112,10 @@
 
   <div id="overlay" class="modal hidden">
     <div class="modal-card card" id="overlay-content"></div>
+  </div>
+
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-card card" id="settings-content"></div>
   </div>
 
   <script type="module" src="app.js"></script>

@@ -1,17 +1,17 @@
 :root {
-  --bg: #121216;
-  --bg-surface: #1b1b27;
-  --bg-card: #1f1f31;
-  --border: #373b55;
-  --gold: #ffd700;
+  --bg: #081028;
+  --bg-surface: #101735;
+  --bg-card: #151f35;
+  --border: #2f3d66;
+  --gold: #ffd24d;
   --gold-soft: #f7d56f;
   --red: #ff4d4d;
   --red-soft: #ff9a9a;
   --text: #f7f1d7;
-  --text-muted: #9a8f78;
+  --text-muted: #a8b0c8;
   --success: #75d5a9;
-  --shadow: 0 0 0 1px rgba(255,255,255,0.04);
-  --radius: 16px;
+  --shadow: 0 25px 60px rgba(0,0,0,0.35);
+  --radius: 18px;
   --font-display: 'Press Start 2P', monospace;
 }
 
@@ -22,7 +22,7 @@
 html, body {
   margin: 0;
   min-height: 100%;
-  background: radial-gradient(circle at top, rgba(255,215,0,0.08), transparent 25%), #0d0d16;
+  background: radial-gradient(circle at top, rgba(255,215,0,0.08), transparent 20%), linear-gradient(180deg, #071426 0%, #02060f 100%);
   color: var(--text);
   font-family: var(--font-display);
 }
@@ -33,13 +33,14 @@ body {
 
 button, .action-button {
   font-family: var(--font-display);
-  border: 2px solid var(--border);
-  background: var(--bg-surface);
+  border: 2px solid rgba(255,255,255,0.06);
+  background: rgba(17, 28, 54, 0.96);
   color: var(--text);
-  padding: 14px 16px;
-  border-radius: 12px;
+  padding: 14px 18px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease;
+  transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.06);
 }
 
 button:hover, .action-button:hover {
@@ -54,14 +55,17 @@ button:disabled, button[disabled], .action-button[disabled] {
 .action-button.primary {
   background: linear-gradient(180deg, #ffd700 0%, #e6b800 100%);
   color: #121216;
+  border-color: rgba(255,215,0,0.55);
 }
 
 .action-button.secondary {
-  background: linear-gradient(180deg, #272a40 0%, #1a1b2a 100%);
+  background: linear-gradient(180deg, rgba(66,84,145,0.95) 0%, rgba(32,42,94,0.95) 100%);
+  color: #f5f7ff;
 }
 
 .action-button.danger {
   background: linear-gradient(180deg, #ff4d4d 0%, #da1f1f 100%);
+  border-color: rgba(255,100,100,0.5);
 }
 
 .app-shell,
@@ -77,15 +81,64 @@ button:disabled, button[disabled], .action-button[disabled] {
   position: relative;
 }
 
+.app-frame {
+  width: min(540px, calc(100vw - 24px));
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 14px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(18, 25, 48, 0.94), rgba(11, 18, 35, 0.95));
+  border: 2px solid rgba(255, 215, 0, 0.15);
+}
+
+.top-bar .brand {
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.panel-title {
+  margin-bottom: 10px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .hidden {
   display: none !important;
 }
 
 .card {
-  background: linear-gradient(180deg, var(--bg-card), #14141f);
-  border: 2px solid var(--border);
+  background: linear-gradient(180deg, rgba(15, 25, 54, 0.96), rgba(11, 18, 37, 0.96));
+  border: 2px solid rgba(255, 215, 0, 0.12);
   border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  box-shadow: var(--shadow);
+}
+
+.panel {
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .top-bar {
@@ -105,12 +158,13 @@ button:disabled, button[disabled], .action-button[disabled] {
 }
 
 .top-bar h1 {
-  margin: 4px 0 0;
-  font-size: 18px;
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.04em;
 }
 
 .screen-container {
-  width: min(420px, calc(100vw - 24px));
+  width: 100%;
   display: grid;
   gap: 16px;
 }
@@ -151,11 +205,11 @@ button:disabled, button[disabled], .action-button[disabled] {
   top: 22px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(420px, calc(100vw - 24px));
+  width: min(540px, calc(100vw - 24px));
   padding: 14px 18px;
-  border-radius: 12px;
-  background: rgba(24, 24, 32, 0.96);
-  border: 2px solid var(--gold);
+  border-radius: 14px;
+  background: rgba(18, 24, 44, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
   text-align: center;
   z-index: 50;
 }
@@ -256,26 +310,28 @@ button:disabled, button[disabled], .action-button[disabled] {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: min(420px, calc(100vw - 24px));
+  width: min(540px, calc(100vw - 24px));
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background: rgba(15, 15, 25, 0.98);
-  border-top: 2px solid var(--border);
-  padding: 10px 10px 18px;
+  background: rgba(6, 12, 28, 0.96);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 10px 18px;
   gap: 8px;
 }
 
 .nav-button {
-  background: transparent;
-  border: 2px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   color: var(--text-muted);
   font-size: 10px;
   padding: 10px 8px;
+  border-radius: 14px;
 }
 
 .nav-button.active-nav {
   color: var(--gold);
-  border-color: var(--gold);
+  border-color: rgba(255,215,0,0.6);
+  background: rgba(255,215,0,0.14);
 }
 
 .login-card button {
@@ -286,7 +342,7 @@ button:disabled, button[disabled], .action-button[disabled] {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4,4,12,0.88);
+  background: rgba(2, 6, 18, 0.92);
   display: grid;
   place-items: center;
   padding: 20px;
@@ -294,12 +350,59 @@ button:disabled, button[disabled], .action-button[disabled] {
 }
 
 .modal-card {
-  width: min(420px, 100%);
+  width: min(520px, 100%);
+  padding: 24px;
 }
 
 .wizard-step {
   display: grid;
-  gap: 12px;
+  gap: 14px;
+}
+
+.wizard-summary {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+}
+
+.settings-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.settings-actions {
+  justify-content: flex-end;
+}
+
+.action-button.active,
+.nav-button.active-nav {
+  transform: translateY(-1px);
+}
+
+.modal-card h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.proof-note-input {
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-family: var(--font-display);
+}
+
+.quest-note,
+.proof-note {
+  color: var(--text);
+  font-size: 11px;
+  opacity: 0.9;
 }
 
 .button-grid,

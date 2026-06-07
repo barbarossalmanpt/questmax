@@ -465,7 +465,12 @@ const state = {
   isAdmin: false,
   bannedUntil: null,
   firestoreReady: false,
-  view: "feed"
+  view: "feed",
+  settings: {
+    showHints: true,
+    guildNotifications: true,
+    compactMode: false
+  }
 };
 
 const elements = {
@@ -491,7 +496,10 @@ const elements = {
   groupFeed: document.getElementById("group-feed"),
   profileSheet: document.getElementById("profile-sheet"),
   badgeList: document.getElementById("badge-list"),
-  adminControls: document.getElementById("admin-controls")
+  adminControls: document.getElementById("admin-controls"),
+  settingsButton: document.getElementById("settings-button"),
+  settingsModal: document.getElementById("settings-modal"),
+  settingsContent: document.getElementById("settings-content")
 };
 
 const wizardSteps = [
@@ -671,6 +679,7 @@ function mergeState(saved) {
   state.bossQuest = saved.bossQuest || state.bossQuest;
   state.bannedUntil = saved.bannedUntil || state.bannedUntil;
   state.isAdmin = saved.isAdmin || state.isAdmin;
+  state.settings = saved.settings || state.settings;
 }
 
 async function loadUser() {
@@ -703,6 +712,7 @@ async function loadUser() {
       state.bossQuest = remote.bossQuest || state.bossQuest;
       state.bannedUntil = remote.bannedUntil || state.bannedUntil;
       state.isAdmin = remote.isAdmin || state.isAdmin;
+      state.settings = remote.settings || state.settings;
     }
   }
 
@@ -716,6 +726,48 @@ async function loadUser() {
 
   saveLocalProfile(state.profile || {});
   saveLocalState();
+}
+
+function openSettings() {
+  elements.settingsModal.classList.remove("hidden");
+  renderSettings();
+}
+
+function closeSettings() {
+  elements.settingsModal.classList.add("hidden");
+}
+
+function renderSettings() {
+  elements.settingsContent.innerHTML = `
+    <h2>Game Settings</h2>
+    <div class="settings-grid"></div>
+    <div class="wizard-controls settings-actions">
+      <button id="close-settings" class="action-button secondary">Close</button>
+    </div>
+  `;
+  const grid = elements.settingsContent.querySelector(".settings-grid");
+  const settings = [
+    { key: "showHints", label: "Show quest hints", desc: "See helpful guidance for locked quests." },
+    { key: "guildNotifications", label: "Guild notifications", desc: "Receive updates when your guild changes." },
+    { key: "compactMode", label: "Compact UI", desc: "Reduce padding for a tighter display." }
+  ];
+  settings.forEach(item => {
+    const button = document.createElement("button");
+    button.className = `action-button secondary${state.settings[item.key] ? " active" : ""}`;
+    button.textContent = `${item.label}: ${state.settings[item.key] ? "On" : "Off"}`;
+    button.addEventListener("click", () => {
+      state.settings[item.key] = !state.settings[item.key];
+      saveAndSync();
+      renderSettings();
+      showToast(`${item.label} ${state.settings[item.key] ? "enabled" : "disabled"}.`);
+    });
+    const row = document.createElement("div");
+    row.className = "wizard-summary";
+    row.innerHTML = `<strong>${item.label}</strong><p>${item.desc}</p>`;
+    row.appendChild(button);
+    grid.appendChild(row);
+  });
+  document.getElementById("close-settings").addEventListener("click", closeSettings);
 }
 
 function getEligibleQuests() {
@@ -818,6 +870,7 @@ function saveAndSync() {
       bossQuest: state.bossQuest,
       bannedUntil: state.bannedUntil,
       isAdmin: state.isAdmin,
+      settings: state.settings,
       lastUpdated: serverTimestamp()
     });
   }
@@ -1649,6 +1702,12 @@ function initListeners() {
     await signOut(AUTH);
     state.user = null;
     showLogin();
+  });
+  elements.settingsButton.addEventListener("click", openSettings);
+  elements.settingsModal.addEventListener("click", e => {
+    if (e.target === elements.settingsModal) {
+      closeSettings();
+    }
   });
   elements.backStep.addEventListener("click", () => {
     currentStep = Math.max(0, currentStep - 1);
