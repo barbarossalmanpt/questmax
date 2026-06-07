@@ -11,112 +11,184 @@
 </head>
 <body>
   <div id="app-shell" class="app-shell hidden">
-    <header class="top-bar">
-      <div>
-        <p class="brand">Summer Side Quests</p>
-        <h1 id="page-title">Quest Feed</h1>
-      </div>
-      <div class="top-actions">
-        <button id="settings-button" class="action-button secondary">Settings</button>
-        <button id="logout-button" class="action-button danger">Log out</button>
-      </div>
-    </header>
-
-    <section id="toast" class="toast hidden"></section>
-
-    <main class="screen-container">
-      <section id="feed-screen" class="screen active-screen">
-        <div class="panel card gold-panel">
-          <div class="panel-title">Quest of the Day</div>
-          <div id="daily-quest" class="daily-quest"></div>
-        </div>
-        <div class="panel card">
-          <div class="panel-title">Available Quests</div>
-          <div id="quest-list" class="quest-grid"></div>
-        </div>
-      </section>
-
-      <section id="board-screen" class="screen">
-        <div class="panel card">
-          <div class="panel-title">Active Missions</div>
-          <div id="accepted-quests" class="quest-grid"></div>
-        </div>
-        <div class="panel card platinum-panel">
-          <div class="panel-title">Boss Quest</div>
-          <div id="boss-quest" class="boss-card"></div>
-        </div>
-      </section>
-
-      <section id="groups-screen" class="screen">
-        <div class="panel card">
-          <div class="panel-title">Guild Hub</div>
-          <div class="group-actions">
-            <button id="create-group-button" class="action-button primary">Create Guild</button>
-            <button id="join-group-button" class="action-button secondary">Join with Code</button>
+    <div class="app-frame">
+      <header class="top-bar">
+        <div class="top-left">
+          <span class="brand">Summer Side Quests</span>
+          <div class="top-status">
+            <div class="level-pill">LEVEL <span id="top-level">1</span></div>
+            <div class="xp-pill">XP <span id="top-xp">0</span></div>
           </div>
-          <div id="group-status" class="group-status"></div>
         </div>
-        <div class="panel card">
-          <div class="panel-title">Guild Feed</div>
-          <div id="group-feed" class="feed-grid"></div>
+        <div class="top-right">
+          <button id="auth-button" class="action-button secondary hidden">Sign in</button>
+          <button id="logout-button" class="action-button danger hidden">Log out</button>
         </div>
-      </section>
+      </header>
 
-      <section id="profile-screen" class="screen">
-        <div class="panel card">
-          <div class="panel-title">Character Sheet</div>
-          <div id="profile-sheet" class="stats-grid"></div>
-        </div>
-        <div class="panel card bronze-panel">
-          <div class="panel-title">Badges & Titles</div>
-          <div id="badge-list" class="badge-grid"></div>
-        </div>
-      </section>
+      <div class="page-tabs">
+        <button class="page-tag active" data-view="profile">PROFILE</button>
+        <button class="page-tag" data-view="battle">BATTLE</button>
+        <button class="page-tag" data-view="clan">CLAN</button>
+      </div>
 
-      <section id="admin-screen" class="screen hidden">
-        <div class="panel card danger-panel">
-          <div class="panel-title">Admin Panel</div>
-          <div id="admin-controls" class="admin-controls"></div>
-        </div>
-      </section>
-    </main>
+      <main class="screen-window" id="screen-window">
+        <div class="screen-strip" id="screen-strip">
+          <section id="profile-screen" class="screen profile-screen">
+            <div class="screen-header">
+              <div>
+                <h2 id="profile-name">Adventurer</h2>
+                <p id="profile-tagline">Champion of the Summer Arena</p>
+              </div>
+              <div class="profile-badge">❤ <span id="profile-completion">0%</span> complete</div>
+            </div>
+            <div class="profile-summary card pixel-card">
+              <div class="mini-title">Champion Stats</div>
+              <div class="stat-row"><span>Level</span><span id="stat-level">1</span></div>
+              <div class="stat-row"><span>Total XP</span><span id="stat-xp">0</span></div>
+              <div class="stat-row"><span>Daily Streak</span><span id="stat-streak">0</span></div>
+              <div class="stat-row"><span>Max Streak</span><span id="stat-max-streak">0</span></div>
+              <div class="stat-row"><span>Quests Done</span><span id="stat-quests-completed">0</span></div>
+            </div>
+            <div class="arena-card card pixel-card">
+              <div class="mini-title">Summer Arena Road</div>
+              <div class="arena-title" id="arena-title">Backyard Beginner</div>
+              <div class="arena-bar">
+                <div class="arena-fill" id="arena-fill"></div>
+              </div>
+              <div class="arena-milestones" id="arena-milestones"></div>
+            </div>
+            <div class="section-row">
+              <div class="card pixel-card achievement-panel">
+                <div class="mini-title">Achievement Badges</div>
+                <div id="badge-list" class="badge-grid"></div>
+              </div>
+              <div class="card pixel-card history-panel">
+                <div class="mini-title">Quest History</div>
+                <div id="history-log" class="history-log"></div>
+              </div>
+            </div>
+          </section>
 
-    <nav class="bottom-nav">
-      <button class="nav-button active-nav" data-view="feed">Feed</button>
-      <button class="nav-button" data-view="board">Missions</button>
-      <button class="nav-button" data-view="groups">Guild</button>
-      <button class="nav-button" data-view="profile">Profile</button>
-      <button id="admin-nav-button" class="nav-button hidden" data-view="admin">Admin</button>
-    </nav>
+          <section id="battle-screen" class="screen battle-screen">
+            <div class="hero-panel card pixel-card">
+              <div class="hero-copy">
+                <div class="hero-tag">MAIN MENU</div>
+                <h2>DO A SIDE QUEST</h2>
+                <p>Choose your path, earn XP, and power up your summer legacy.</p>
+              </div>
+              <button id="open-quest-modal" class="hero-button action-button primary">DO A SIDE QUEST</button>
+            </div>
+            <div class="battle-stats card pixel-card">
+              <div class="mini-title">Activation Station</div>
+              <div class="battle-detail"><span>Active Quest Slots</span><span id="slot-count">0/4</span></div>
+              <div id="active-quests" class="slot-grid"></div>
+            </div>
+            <div class="section-row">
+              <div class="card pixel-card quest-summary">
+                <div class="mini-title">Quest Guide</div>
+                <p id="quest-hint">Your profile feeds your quest pool with gear and realm-aware choices.</p>
+              </div>
+              <div class="card pixel-card quick-actions">
+                <div class="mini-title">Quick Menu</div>
+                <button id="open-board-button" class="action-button secondary">Browse Quest Board</button>
+                <button id="open-quick-quiz" class="action-button secondary">Find a Quest Quiz</button>
+              </div>
+            </div>
+          </section>
+
+          <section id="clan-screen" class="screen clan-screen">
+            <div class="clan-header card pixel-card">
+              <div>
+                <div class="mini-title">Clan Hub</div>
+                <h3 id="clan-name">Wolfpack Guild</h3>
+                <p id="clan-status">Live co-op chest and proof feed.</p>
+              </div>
+              <button id="open-group-modal" class="action-button primary">VIEW GROUP</button>
+            </div>
+            <div class="clan-chest card pixel-card">
+              <div class="mini-title">Group Quest Chest</div>
+              <div class="chest-bar">
+                <div class="chest-progress" id="chest-progress"></div>
+              </div>
+              <div class="chest-meta"><span id="chest-progress-text">0 / 100</span><span id="chest-timer">00:00:00</span></div>
+            </div>
+            <div class="clan-actions card pixel-card">
+              <div class="mini-title">Community Feed</div>
+              <form id="chat-form" class="chat-form">
+                <input id="chat-input" placeholder="Share proof or a battle shout..." />
+                <label class="file-label">
+                  Upload Proof
+                  <input id="chat-image" type="file" accept="image/*" />
+                </label>
+                <button type="submit" class="action-button primary">Post</button>
+              </form>
+            </div>
+            <div id="clan-feed" class="feed-list"></div>
+          </section>
+        </div>
+      </main>
+
+      <nav class="bottom-nav">
+        <button class="nav-button active" data-view="profile">PROFILE</button>
+        <button class="nav-button" data-view="battle">BATTLE</button>
+        <button class="nav-button" data-view="clan">CLAN</button>
+      </nav>
+    </div>
   </div>
 
   <div id="login-shell" class="login-shell">
-    <div class="login-card card">
+    <div class="login-card card pixel-card">
       <h1>Summer Side Quests</h1>
-      <p>Power up your summer with AI-driven quests, guild quests, and retro RPG progression.</p>
+      <p class="hero-copy">A demo RPG quest app with group proof, shared chests, and retro battle menus.</p>
       <button id="login-button" class="action-button primary">Sign in with Google</button>
-      <p class="login-note">Login with your Google account to save progress and join a guild.</p>
+      <button id="guest-button" class="action-button secondary">Continue as Guest</button>
+      <p class="login-note">LocalStorage preserves your progress. Firebase hooks are ready for later enablement.</p>
     </div>
   </div>
 
   <div id="onboarding-modal" class="modal hidden">
-    <div class="modal-card card">
+    <div class="modal-card card pixel-card" id="onboarding-card">
       <h2>Character Creation</h2>
-      <div id="wizard-step" class="wizard-step"></div>
+      <div id="onboarding-content"></div>
       <div class="wizard-controls">
-        <button id="back-step" class="action-button secondary hidden">Back</button>
-        <button id="next-step" class="action-button primary">Next</button>
+        <button id="wizard-back" class="action-button secondary hidden">Back</button>
+        <button id="wizard-next" class="action-button primary">Next</button>
       </div>
     </div>
   </div>
 
-  <div id="overlay" class="modal hidden">
-    <div class="modal-card card" id="overlay-content"></div>
+  <div id="quest-modal" class="modal hidden">
+    <div class="modal-card card pixel-card" id="quest-modal-card">
+      <h2>Quest Launcher</h2>
+      <div id="quest-modal-content"></div>
+      <div class="wizard-controls">
+        <button id="quest-close" class="action-button secondary">Close</button>
+      </div>
+    </div>
   </div>
 
-  <div id="settings-modal" class="modal hidden">
-    <div class="modal-card card" id="settings-content"></div>
+  <div id="group-modal" class="modal hidden">
+    <div class="modal-card card pixel-card" id="group-modal-card">
+      <h2>Clan Command</h2>
+      <div id="group-modal-content"></div>
+      <div class="wizard-controls">
+        <button id="group-close" class="action-button secondary">Close</button>
+      </div>
+    </div>
   </div>
+
+  <div id="report-modal" class="modal hidden">
+    <div class="modal-card card pixel-card" id="report-modal-card">
+      <h2>Report Cheater</h2>
+      <div id="report-modal-content"></div>
+      <div class="wizard-controls">
+        <button id="report-close" class="action-button secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
 
   <script type="module" src="app.js"></script>
 </body>
