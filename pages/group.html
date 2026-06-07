@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Group | QuestMax</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="subtitle">Group Hub</p>
+        <h1>My group</h1>
+      </div>
+      <button id="logout-button" class="button danger">Sign Out</button>
+    </header>
+
+    <section class="card form-card">
+      <label>
+        Create a new group
+        <input id="group-name" type="text" placeholder="Group name" />
+      </label>
+      <button id="create-group" class="button primary">Create Group</button>
+    </section>
+
+    <section class="card form-card">
+      <label>
+        Join a group by code
+        <input id="join-code" type="text" placeholder="Enter group code" />
+      </label>
+      <button id="join-group" class="button primary">Request join</button>
+    </section>
+
+    <section id="group-status" class="card">
+      <h2>Group status</h2>
+      <p>Sign in and join a group to see members and requests.</p>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="feed.html" class="nav-item">Feed</a>
+      <a href="group.html" class="nav-item active">Group</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="profile.html" class="nav-item">Profile</a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { initAuthPage } from '../js/auth.js';
+    import { createGroup, requestJoinGroup } from '../js/groups.js';
+
+    initAuthPage();
+
+    document.getElementById('create-group').addEventListener('click', async () => {
+      const name = document.getElementById('group-name').value.trim();
+      if (!name) {
+        alert('Enter a group name first.');
+        return;
+      }
+      const group = await createGroup(name);
+      if (group) {
+        document.getElementById('group-status').innerHTML = `<h2>Group created</h2><p>${group.name} • code: ${group.code}</p>`;
+      }
+    });
+
+    document.getElementById('join-group').addEventListener('click', async () => {
+      const code = document.getElementById('join-code').value.trim();
+      if (!code) {
+        alert('Enter the group code.');
+        return;
+      }
+      const success = await requestJoinGroup(code);
+      if (success) {
+        alert('Join request sent.');
+      } else {
+        alert('Could not find group with that code.');
+      }
+    });
+  </script>
+</body>
+</html>

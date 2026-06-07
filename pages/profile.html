@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile | QuestMax</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="subtitle">Profile</p>
+        <h1>My stats</h1>
+      </div>
+      <button id="logout-button" class="button danger">Sign Out</button>
+    </header>
+
+    <section class="card" id="profile-card">
+      <p>Loading profile…</p>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="feed.html" class="nav-item">Feed</a>
+      <a href="group.html" class="nav-item">Group</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="profile.html" class="nav-item active">Profile</a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { initAuthPage, auth } from '../js/auth.js';
+    import { db } from '../js/firebase.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js';
+
+    initAuthPage();
+
+    async function loadProfile() {
+      const user = auth.currentUser;
+      if (!user) return;
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const data = userDoc.exists() ? userDoc.data() : null;
+      const target = document.getElementById('profile-card');
+      if (!data) {
+        target.innerHTML = '<p>Profile not found.</p>';
+        return;
+      }
+      target.innerHTML = `
+        <h2>${data.displayName}</h2>
+        <p><strong>XP:</strong> ${data.xp || 0}</p>
+        <p><strong>Level:</strong> ${data.level || 1}</p>
+        <p><strong>Streak:</strong> ${data.streak || 0} days</p>
+        <p><strong>Hobbies:</strong> ${data.personalisation?.hobbies || 'Not set'}</p>
+      `;
+    }
+
+    window.addEventListener('load', loadProfile);
+  </script>
+</body>
+</html>

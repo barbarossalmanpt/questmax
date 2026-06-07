@@ -1,0 +1,52 @@
+[
+  {
+    "id": "bronze-1",
+    "title": "Sunset Sketch Quest",
+    "description": "Find a quiet spot near a park or balcony and sketch the sunset scene with one extra fantasy detail.",
+    "tier": "Bronze",
+    "xpReward": 75,
+    "tags": ["creative", "solo", "outdoor"],
+    "estimatedTime": "30-45 minutes",
+    "requirements": ["paper or notebook", "pen or pencil"]
+  },
+  {
+    "id": "silver-1",
+    "title": "Rooftop Relay",
+    "description": "Organize a short relay race with two friends using three fun checkpoints in your neighborhood.",
+    "tier": "Silver",
+    "xpReward": 180,
+    "tags": ["active", "friends", "outdoor"],
+    "estimatedTime": "1-1.5 hours",
+    "requirements": ["2+ friends", "open route"]
+  },
+  {
+    "id": "gold-1",
+    "title": "Mystery Snack Hunt",
+    "description": "Create a mini scavenger hunt that leads your group to a secret snack spot and reveals a surprise treat.",
+    "tier": "Gold",
+    "xpReward": 320,
+    "tags": ["group", "food", "urban"],
+    "estimatedTime": "2-3 hours",
+    "requirements": ["3+ people", "snack budget"]
+  },
+  {
+    "id": "platinum-1",
+    "title": "Night Sky Campfire",
+    "description": "Plan a safe evening campfire with story prompts, marshmallows, and a stargazing challenge.",
+    "tier": "Platinum",
+    "xpReward": 700,
+    "tags": ["outdoor", "friends", "night"],
+    "estimatedTime": "3-4 hours",
+    "requirements": ["campfire-friendly location", "snacks"]
+  },
+  {
+    "id": "diamond-1",
+    "title": "Legendary Challenge Run",
+    "description": "Build a custom adventure obstacle course and finish it with a group photo at the final trophy spot.",
+    "tier": "Diamond",
+    "xpReward": 1300,
+    "tags": ["epic", "group", "competition"],
+    "estimatedTime": "4+ hours",
+    "requirements": ["4+ people", "open space"]
+  }
+]

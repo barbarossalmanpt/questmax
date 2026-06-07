@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | QuestMax</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="subtitle">Leaderboard</p>
+        <h1>Top Adventurers</h1>
+      </div>
+      <button id="logout-button" class="button danger">Sign Out</button>
+    </header>
+
+    <section class="card" id="leaderboard-card">
+      <p>Loading leaderboard…</p>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="feed.html" class="nav-item">Feed</a>
+      <a href="group.html" class="nav-item">Group</a>
+      <a href="leaderboard.html" class="nav-item active">Leaderboard</a>
+      <a href="profile.html" class="nav-item">Profile</a>
+    </nav>
+  </div>
+
+  <script type="module" src="../js/leaderboard.js"></script>
+  <script type="module">
+    import { initAuthPage } from '../js/auth.js';
+    import { renderLeaderboard } from '../js/leaderboard.js';
+
+    initAuthPage();
+    renderLeaderboard('leaderboard-card');
+  </script>
+</body>
+</html>

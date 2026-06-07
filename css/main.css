@@ -1,0 +1,209 @@
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a2e;
+  --bg-card: #16213e;
+  --accent-gold: #ffd700;
+  --accent-gold-dim: #b8860b;
+  --accent-red: #c0392b;
+  --accent-red-bright: #e74c3c;
+  --text-primary: #f0e6d3;
+  --text-secondary: #a89b8c;
+  --text-muted: #5c5244;
+  --border-color: #2d2d4e;
+  --tier-bronze: #cd7f32;
+  --tier-silver: #c0c0c0;
+  --tier-gold: #ffd700;
+  --tier-platinum: #e5e4e2;
+  --tier-diamond: #b9f2ff;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body: 'VT323', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at top, rgba(255,215,0,0.06), transparent 35%), var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+body {
+  line-height: 1.4;
+}
+
+a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+button, .button {
+  font-family: var(--font-pixel);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+button:hover, .button:hover {
+  transform: translateY(-1px);
+}
+
+.button.primary {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.button.danger {
+  background: var(--accent-red);
+  color: var(--text-primary);
+}
+
+.page-shell, .app-shell {
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
+}
+
+.hero-card, .card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero-card {
+  text-align: center;
+}
+
+.hero-card h1, .app-header h1 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 24px;
+  font-family: var(--font-pixel);
+}
+
+.subtitle {
+  font-family: var(--font-pixel);
+  color: var(--accent-gold);
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.content-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.quest-card {
+  padding: var(--spacing-md);
+}
+
+.quest-card h2 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 18px;
+  font-family: var(--font-pixel);
+}
+
+.quest-card p {
+  color: var(--text-secondary);
+}
+
+.quest-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+}
+
+.quest-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.quest-badge.bronze { background: rgba(205,127,50,0.12); color: var(--tier-bronze); }
+.quest-badge.silver { background: rgba(192,192,192,0.12); color: var(--tier-silver); }
+.quest-badge.gold { background: rgba(255,215,0,0.12); color: var(--tier-gold); }
+.quest-badge.platinum { background: rgba(229,228,226,0.16); color: var(--tier-platinum); }
+.quest-badge.diamond { background: rgba(185,242,255,0.16); color: var(--tier-diamond); }
+
+.card h1, .card h2 {
+  margin: 0 0 var(--spacing-sm);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--spacing-md);
+  font-size: 14px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: var(--spacing-xs);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(13,13,13,0.95);
+  border-top: 2px solid var(--border-color);
+  height: 60px;
+}
+
+.nav-item {
+  color: var(--text-secondary);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-align: center;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  color: var(--accent-gold);
+}
+
+@media (min-width: 768px) {
+  .page-shell, .app-shell {
+    padding: var(--spacing-xl);
+  }
+  .bottom-nav {
+    position: static;
+    transform: none;
+    margin-top: var(--spacing-lg);
+    border-top: none;
+    background: transparent;
+    height: auto;
+  }
+}

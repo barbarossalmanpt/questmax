@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding | QuestMax</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="subtitle">Welcome</p>
+        <h1>Set your adventure profile</h1>
+      </div>
+    </header>
+
+    <form id="onboarding-form" class="card form-card">
+      <label>
+        Athletic level
+        <select id="athletic-level" required>
+          <option value="beginner">Beginner</option>
+          <option value="active">Active</option>
+          <option value="athlete">Athlete</option>
+        </select>
+      </label>
+      <label>
+        Hobbies
+        <input type="text" id="hobbies" placeholder="e.g. biking, drawing, games" required />
+      </label>
+      <label>
+        Solo or with friends
+        <select id="solo-or-group" required>
+          <option value="solo">Solo</option>
+          <option value="group">With friends</option>
+        </select>
+      </label>
+      <label>
+        Location type
+        <select id="location-type" required>
+          <option value="urban">Urban</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="home">Home</option>
+        </select>
+      </label>
+      <label>
+        Budget
+        <select id="budget" required>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <button type="submit" class="button primary">Save profile</button>
+    </form>
+
+    <nav class="bottom-nav">
+      <a href="feed.html" class="nav-item">Feed</a>
+      <a href="group.html" class="nav-item">Group</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="profile.html" class="nav-item">Profile</a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { initAuthPage } from '../js/auth.js';
+    import { auth, db } from '../js/firebase.js';
+    import { doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js';
+
+    initAuthPage();
+
+    const form = document.getElementById('onboarding-form');
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const profile = {
+        athleticLevel: document.getElementById('athletic-level').value,
+        hobbies: document.getElementById('hobbies').value.trim(),
+        soloOrGroup: document.getElementById('solo-or-group').value,
+        location: document.getElementById('location-type').value,
+        budget: document.getElementById('budget').value
+      };
+
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        personalisation: profile
+      });
+      window.location.href = 'feed.html';
+    });
+  </script>
+</body>
+</html>

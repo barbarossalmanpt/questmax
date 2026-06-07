@@ -1,0 +1,38 @@
+.form-card {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.detail-card {
+  padding: var(--spacing-lg);
+}
+
+.hero-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.hero-links a {
+  color: var(--accent-gold);
+  font-size: 14px;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 22px;
+}
+
+.content-grid {
+  padding-bottom: 100px;
+}

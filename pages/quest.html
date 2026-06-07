@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest Detail | QuestMax</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="subtitle">Quest Detail</p>
+        <h1 id="quest-title">Loading...</h1>
+      </div>
+      <button id="logout-button" class="button danger">Sign Out</button>
+    </header>
+
+    <section class="card detail-card">
+      <p id="quest-description"></p>
+      <div class="quest-meta">
+        <span id="quest-tier"></span>
+        <span id="quest-xp"></span>
+      </div>
+      <p><strong>Requirements:</strong> <span id="quest-requirements"></span></p>
+      <button id="claim-button" class="button primary">Claim quest</button>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="feed.html" class="nav-item">Feed</a>
+      <a href="group.html" class="nav-item">Group</a>
+      <a href="leaderboard.html" class="nav-item">Leaderboard</a>
+      <a href="profile.html" class="nav-item">Profile</a>
+    </nav>
+  </div>
+
+  <script type="module" src="../js/auth.js"></script>
+  <script type="module" src="../js/quests.js"></script>
+  <script type="module">
+    import { initAuthPage } from '../js/auth.js';
+    import { loadQuestDetail } from '../js/quests.js';
+
+    initAuthPage();
+    loadQuestDetail();
+  </script>
+</body>
+</html>

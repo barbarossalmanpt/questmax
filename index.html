@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuestMax</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero-card">
+      <h1>QuestMax</h1>
+      <p>Your summer adventure starts now. Sign in with Google to load quests, join a group, and earn XP.</p>
+      <button id="login-button" class="button primary">Sign in with Google</button>
+      <div class="hero-links">
+        <a href="pages/feed.html">View Demo Feed</a>
+        <a href="pages/onboarding.html">Onboarding</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+  <script type="module">
+    import { initAuthPage } from './js/auth.js';
+    initAuthPage();
+  </script>
+</body>
+</html>
