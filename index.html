@@ -2,28 +2,115 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuestMax</title>
-  <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/components.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Summer Side Quests</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page-shell">
-    <section class="hero-card">
-      <h1>QuestMax</h1>
-      <p>Your summer adventure starts now. Sign in with Google to load quests, join a group, and earn XP.</p>
-      <button id="login-button" class="button primary">Sign in with Google</button>
-      <div class="hero-links">
-        <a href="pages/feed.html">View Demo Feed</a>
-        <a href="pages/onboarding.html">Onboarding</a>
+  <div id="app-shell" class="app-shell hidden">
+    <header class="top-bar">
+      <div>
+        <p class="brand">Summer Side Quests</p>
+        <h1 id="page-title">Feed</h1>
       </div>
-    </section>
-  </main>
+      <button id="logout-button" class="action-button danger">Log out</button>
+    </header>
 
-  <script type="module" src="js/auth.js"></script>
-  <script type="module">
-    import { initAuthPage } from './js/auth.js';
-    initAuthPage();
-  </script>
+    <section id="toast" class="toast hidden"></section>
+
+    <main class="screen-container">
+      <section id="feed-screen" class="screen active-screen">
+        <div class="panel card gold-panel">
+          <div class="panel-title">Quest of the Day</div>
+          <div id="daily-quest" class="daily-quest"></div>
+        </div>
+        <div class="panel card">
+          <div class="panel-title">Quest Board</div>
+          <div id="quest-list" class="quest-grid"></div>
+        </div>
+      </section>
+
+      <section id="board-screen" class="screen">
+        <div class="panel card">
+          <div class="panel-title">Accepted Quests</div>
+          <div id="accepted-quests" class="quest-grid"></div>
+        </div>
+        <div class="panel card platinum-panel">
+          <div class="panel-title">Boss Quest</div>
+          <div id="boss-quest" class="boss-card"></div>
+        </div>
+      </section>
+
+      <section id="groups-screen" class="screen">
+        <div class="panel card">
+          <div class="panel-title">Guild Operations</div>
+          <div class="group-actions">
+            <button id="create-group-button" class="action-button primary">Create Guild</button>
+            <button id="join-group-button" class="action-button secondary">Join with Code</button>
+          </div>
+          <div id="group-status" class="group-status"></div>
+        </div>
+        <div class="panel card">
+          <div class="panel-title">Guild Feed</div>
+          <div id="group-feed" class="feed-grid"></div>
+        </div>
+      </section>
+
+      <section id="profile-screen" class="screen">
+        <div class="panel card">
+          <div class="panel-title">Adventurer Sheet</div>
+          <div id="profile-sheet" class="stats-grid"></div>
+        </div>
+        <div class="panel card bronze-panel">
+          <div class="panel-title">Achievements</div>
+          <div id="badge-list" class="badge-grid"></div>
+        </div>
+      </section>
+
+      <section id="admin-screen" class="screen hidden">
+        <div class="panel card danger-panel">
+          <div class="panel-title">Admin Command</div>
+          <div id="admin-controls" class="admin-controls"></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-button active-nav" data-view="feed">Feed</button>
+      <button class="nav-button" data-view="board">Board</button>
+      <button class="nav-button" data-view="groups">Groups</button>
+      <button class="nav-button" data-view="profile">Profile</button>
+      <button id="admin-nav-button" class="nav-button hidden" data-view="admin">Admin</button>
+    </nav>
+  </div>
+
+  <div id="login-shell" class="login-shell">
+    <div class="login-card card">
+      <h1>Summer Side Quests</h1>
+      <p>Power up your summer with AI-driven quests, guild quests, and retro RPG progression.</p>
+      <button id="login-button" class="action-button primary">Sign in with Google</button>
+      <p class="login-note">Login with your Google account to save progress and join a guild.</p>
+    </div>
+  </div>
+
+  <div id="onboarding-modal" class="modal hidden">
+    <div class="modal-card card">
+      <h2>Character Creation</h2>
+      <div id="wizard-step" class="wizard-step"></div>
+      <div class="wizard-controls">
+        <button id="back-step" class="action-button secondary hidden">Back</button>
+        <button id="next-step" class="action-button primary">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="overlay" class="modal hidden">
+    <div class="modal-card card" id="overlay-content"></div>
+  </div>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
