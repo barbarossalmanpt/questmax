@@ -26,16 +26,39 @@ html, body {
   color: var(--text);
   background: radial-gradient(circle at top, rgba(255,215,0,0.08), transparent 15%),
               linear-gradient(180deg, #0b101f 0%, #07090f 100%);
+  text-size-adjust: 100%;
 }
 
 body {
   overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 button,
 input,
-textarea {
+textarea,
+select {
   font-family: var(--font-display);
+  white-space: normal;
+}
+
+button,
+.action-button,
+.page-tag,
+.option-card,
+.filter-pill,
+.feed-card,
+.quest-card,
+.slot-card,
+.badge-card,
+.report-card,
+.history-item,
+.chat-form input,
+.file-label,
+p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 button,
@@ -567,6 +590,26 @@ button:hover,
 
   .top-bar {
     flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .page-tabs {
+    gap: 8px;
+  }
+
+  .page-tag,
+  .nav-button,
+  .filter-pill,
+  .option-card,
+  .action-button {
+    font-size: 11px;
+  }
+
+  .page-tag {
+    padding: 12px 10px;
+    min-height: 48px;
+    white-space: normal;
   }
 
   .screen {
@@ -578,13 +621,46 @@ button:hover,
   .hero-panel {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
   }
 
-  .screen-strip {
-    width: 300%;
+  .hero-button {
+    width: 100%;
+    font-size: 13px;
   }
 
   .section-row {
     display: grid;
+    gap: 14px;
+  }
+
+  .option-grid,
+  .filter-grid,
+  .wizard-choice-list,
+  .request-list,
+  .badge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy,
+  .stat-row,
+  .battle-detail,
+  .chest-meta,
+  .history-item,
+  .badge-card,
+  .quest-card,
+  .feed-card,
+  .report-card {
+    font-size: 13px;
+  }
+
+  .feed-list {
+    max-height: none;
+  }
+
+  .modal-card {
+    width: min(100%, 100%);
+    padding: 22px;
+    max-height: 90vh;
   }
 }
