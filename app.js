@@ -371,11 +371,12 @@ let state = {};
 let countdownInterval = null;
 
 function getCurrentUser() {
-  return state.users.find((user) => user.id === state.currentUserId) || state.users[0];
+  const users = state.users || SAMPLE_USERS;
+  return users.find((user) => user.id === state.currentUserId) || users[0];
 }
 
 function getGroup() {
-  return state.group;
+  return state.group || DEFAULT_STATE.group;
 }
 
 function getUserById(id) {
@@ -429,14 +430,16 @@ async function loadState() {
   const rawState = localStorage.getItem(STORAGE_STATE);
   const rawProfile = localStorage.getItem(STORAGE_PROFILE);
 
+  const baseState = { ...DEFAULT_STATE };
   if (rawState) {
     try {
-      state = JSON.parse(rawState);
+      const parsed = JSON.parse(rawState);
+      state = { ...baseState, ...parsed };
     } catch (error) {
-      state = { ...DEFAULT_STATE };
+      state = baseState;
     }
   } else {
-    state = { ...DEFAULT_STATE };
+    state = baseState;
   }
 
   if (rawProfile) {
@@ -447,13 +450,18 @@ async function loadState() {
     }
   }
 
-  if (!state.currentUserId) {
-    state.currentUserId = DEFAULT_STATE.currentUserId;
-  }
-
-  if (!state.questModal) {
-    state.questModal = "closed";
-  }
+  state.users = state.users || SAMPLE_USERS;
+  state.quests = state.quests || MASTER_QUESTS;
+  state.group = state.group || DEFAULT_STATE.group;
+  state.activeSlots = state.activeSlots || [];
+  state.feedPosts = state.feedPosts || DEFAULT_STATE.feedPosts;
+  state.boardFilters = state.boardFilters || { ...DEFAULT_STATE.boardFilters };
+  state.quickQuizAnswers = state.quickQuizAnswers || { ...DEFAULT_STATE.quickQuizAnswers };
+  state.currentView = state.currentView || DEFAULT_STATE.currentView;
+  state.currentUserId = state.currentUserId || DEFAULT_STATE.currentUserId;
+  state.questModal = state.questModal || "closed";
+  state.groupModal = state.groupModal || false;
+  state.quickQuizStep = state.quickQuizStep || DEFAULT_STATE.quickQuizStep;
 
   saveState();
 }
